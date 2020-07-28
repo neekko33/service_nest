@@ -9,9 +9,9 @@ export class YysTVService {
     @InjectRepository(YysTV)
     private readonly yysTVRepository: Repository<YysTV>,
   ) {}
-  async findAll(): Promise<YysTV> {
+  async findAll(): Promise<YysTV[]> {
     try {
-      return await this.yysTVRepository.query('SELECT * from yysTV;');
+      return await this.yysTVRepository.find();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
