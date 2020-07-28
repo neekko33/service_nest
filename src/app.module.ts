@@ -4,6 +4,7 @@ import { UserModule } from './module/user/user.module';
 import { YysTVModule } from './module/yysTV/yysTV.module';
 import { TypeModule } from './module/type/type.module';
 import { ArticleModule } from './module/article/article.module';
+import { FileModule } from './module/file/file.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ArticleModule } from './module/article/article.module';
     YysTVModule,
     TypeModule,
     ArticleModule,
+    FileModule,
   ],
 })
 export class AppModule {}

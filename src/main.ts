@@ -9,7 +9,7 @@ async function main() {
   app.useGlobalFilters(new HttpExceptionFilter());
   // 全局注册拦截器
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(3000);
+  await app.listen(7001);
 }
 
 main();

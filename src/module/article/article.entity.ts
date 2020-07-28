@@ -1,29 +1,28 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../user/user.entity';
-import { type } from 'os';
 import { Type } from '../type/type.entity';
 
 @Entity()
 export class Article {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '文章id' })
   id: number;
 
-  @Column()
+  @Column({ comment: '文章标题' })
   title: string;
 
-  @Column('text')
+  @Column({ comment: '文章内容', type: 'text' })
   content?: string;
 
-  @Column('text')
+  @Column({ comment: '文章介绍', type: 'text' })
   introduce: string;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'bigint', comment: '文章时间' })
   addTime: number;
 
-  @Column()
+  @Column({ comment: '类型id' })
   typeId: number;
 
-  @Column()
+  @Column({ comment: '用户id' })
   userId: number;
 
   @ManyToOne(

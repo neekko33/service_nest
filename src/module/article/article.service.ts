@@ -113,6 +113,16 @@ export class ArticleService {
         .leftJoin('a.type', 't')
         .where('a.typeId=:id', { id })
         .orderBy('a.id', 'ASC')
+        .select([
+          'a.id',
+          'a.title',
+          'a.introduce',
+          'a.addTime',
+          'u.id',
+          'u.username',
+          't.id',
+          't.typeName',
+        ])
         .getMany();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);

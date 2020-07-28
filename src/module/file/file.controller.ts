@@ -8,10 +8,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller()
 export class FileController {
-  constructor() {}
-  @Post('/api/v3/file')
+  @Post('/api/v5/file')
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file) {
-    return file;
+    return {
+      path: 'http://212.64.78.155/images/' + file.filename,
+    };
   }
 }
