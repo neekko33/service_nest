@@ -10,11 +10,11 @@ import { FileModule } from './module/file/file.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '212.64.78.155',
+      host: '',
       port: 3306,
       username: 'root',
-      password: 'Dj.249575',
-      database: 'mwwow',
+      password: 'root',
+      database: '',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
