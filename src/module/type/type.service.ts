@@ -9,20 +9,32 @@ export class TypeService {
     @InjectRepository(Type)
     private readonly typeRepository: Repository<Type>,
   ) {}
+  // 新增类型
   async create(typeName: string): Promise<void> {
-    await this.typeRepository.query(
-      `INSERT INTO type VALUES(null,'${typeName}');`,
-    );
+    await this.typeRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Type)
+      .values({ typeName })
+      .execute();
   }
+  // 删除类型
   async delete(id: string): Promise<void> {
-    await this.typeRepository.query(`DELETE FROM type WHERE id=${id};`);
+    await this.typeRepository.delete(id);
   }
+  // 修改类型
   async update(id: string, typeName: string): Promise<void> {
-    await this.typeRepository.query(
-      `UPDATE type SET typeName='${typeName}' WHERE id=${id}`,
-    );
+    await this.typeRepository
+      .createQueryBuilder()
+      .update(Type)
+      .set({
+        typeName,
+      })
+      .where('id=:id', { id })
+      .execute();
   }
+  // 查找全部类型
   async findAll(): Promise<Type[]> {
-    return await this.typeRepository.query('SELECT * FROM type');
+    return await this.typeRepository.find();
   }
 }

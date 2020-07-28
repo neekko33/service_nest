@@ -10,7 +10,9 @@ export class ArticleService {
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
   ) {}
+  // 新增文章
   async create(a: CreateArticleDto): Promise<void> {
+    const { typeId, title, content, introduce, addTime, userId } = a;
     try {
       await getConnection()
         .createQueryBuilder()
@@ -18,12 +20,12 @@ export class ArticleService {
         .into(Article)
         .values([
           {
-            typeId: a.typeId,
-            title: a.title,
-            content: a.content,
-            introduce: a.introduce,
-            addTime: a.addTime,
-            userId: a.userId,
+            typeId,
+            title,
+            content,
+            introduce,
+            addTime,
+            userId,
           },
         ])
         .execute();
@@ -31,13 +33,17 @@ export class ArticleService {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // 删除文章
   async delete(id: string): Promise<void> {
     try {
-      await this.articleRepository.query(`DELETE FROM article WHERE id=${id}`);
+      await this.articleRepository.delete(id);
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // 修改文章
   async update(id: string, a: CreateArticleDto): Promise<void> {
     try {
       await getConnection()
@@ -57,39 +63,57 @@ export class ArticleService {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  async findAll(): Promise<Article[]> {
-    const sql =
-      `SELECT article.id as id,article.title as title,article.introduce as introduce,` +
-      `article.addTime as addTime,type.typeName as typeName,user.username as username ` +
-      `FROM article LEFT JOIN type ON article.typeId=type.id LEFT JOIN user ON ` +
-      `article.userId=user.id ORDER BY article.id DESC`;
+
+  // 查找全部文章
+  async findAll(pageNum: number, pageSize: number): Promise<Article[]> {
     try {
-      return await this.articleRepository.query(sql);
+      return await this.articleRepository
+        .createQueryBuilder('a')
+        .leftJoin('a.user', 'u')
+        .leftJoin('a.type', 't')
+        .orderBy('a.id', 'DESC')
+        .skip(pageSize * (pageNum - 1))
+        .take(pageSize)
+        .select([
+          'a.id',
+          'a.title',
+          'a.introduce',
+          'a.addTime',
+          'u.id',
+          'u.username',
+          't.id',
+          't.typeName',
+        ])
+        .getMany();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // 通过ID查找文章
   async findId(id: string): Promise<Article> {
-    const sql =
-      `SELECT article.id as id,article.title as title,article.introduce as introduce,` +
-      `article.content as content,article.typeId as typeId,article.userId as userId,` +
-      `article.addTime as addTime,type.typeName as typeName,user.username as username ` +
-      `FROM article LEFT JOIN type ON article.typeId=type.id LEFT JOIN user ON ` +
-      `article.userId=user.id WHERE article.id=${id} ORDER BY article.id DESC`;
     try {
-      return await this.articleRepository.query(sql);
+      return await this.articleRepository
+        .createQueryBuilder('a')
+        .leftJoinAndSelect('a.user', 'u')
+        .leftJoinAndSelect('a.type', 't')
+        .where('a.id=:id', { id })
+        .getOne();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  async findType(id:string):Promise<Article[]> {
-    const sql =
-      `SELECT article.id as id,article.title as title,article.introduce as introduce,` +
-      `article.addTime as addTime,type.typeName as typeName,user.username as username ` +
-      `FROM article LEFT JOIN type ON article.typeId=type.id LEFT JOIN user ON ` +
-      `article.userId=user.id WHERE article.typeId=${id} ORDER BY article.id DESC`;
+
+  // 通过类型查找文章
+  async findType(id: string): Promise<Article[]> {
     try {
-      return await this.articleRepository.query(sql);
+      return await this.articleRepository
+        .createQueryBuilder('a')
+        .leftJoin('a.user', 'u')
+        .leftJoin('a.type', 't')
+        .where('a.typeId=:id', { id })
+        .orderBy('a.id', 'ASC')
+        .getMany();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }

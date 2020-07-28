@@ -12,31 +12,11 @@ export class UserService {
 
   // 查找所有用户
   async findAll(): Promise<User[]> {
-    return await this.usersRepository
-      .createQueryBuilder('user')
-      .select([
-        'user.id',
-        'user.username',
-        'user.nickname',
-        'user.tags',
-        'user.address',
-        'user.introduce',
-      ])
-      .getMany();
+    return await this.usersRepository.find();
   }
+
   // 查找目标用户
   async findOne(id: string): Promise<User> {
-    return await this.usersRepository
-      .createQueryBuilder('user')
-      .select([
-        'user.id',
-        'user.username',
-        'user.nickname',
-        'user.tags',
-        'user.address',
-        'user.introduce',
-      ])
-      .where('user.id=:id', { id })
-      .getOne();
+    return await this.usersRepository.findOne(id);
   }
 }

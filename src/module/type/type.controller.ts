@@ -12,10 +12,10 @@ import {
 import { TypeService } from './type.service';
 import { Type } from './type.entity';
 
-@Controller()
+@Controller('/api/v5/type')
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
-  @Post('/api/v3/type')
+  @Post()
   async addType(@Body('typeName') typename: string): Promise<void> {
     try {
       await this.typeService.create(typename);
@@ -23,7 +23,7 @@ export class TypeController {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @Delete('/api/v3/type/:id')
+  @Delete(':id')
   async deleteType(@Param('id') id: string): Promise<void> {
     try {
       await this.typeService.delete(id);
@@ -31,7 +31,7 @@ export class TypeController {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @Put('/api/v3/type/:id')
+  @Put(':id')
   async updateType(
     @Param('id') id: string,
     @Body('typeName') typeName: string,
@@ -42,7 +42,7 @@ export class TypeController {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  @Get('/api/v3/type')
+  @Get()
   async getType(): Promise<Type[]> {
     try {
       return await this.typeService.findAll();

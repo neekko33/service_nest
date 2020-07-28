@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './module/user/user.module';
 import { YysTVModule } from './module/yysTV/yysTV.module';
+import { TypeModule } from './module/type/type.module';
+import { ArticleModule } from './module/article/article.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -10,12 +13,14 @@ import { YysTVModule } from './module/yysTV/yysTV.module';
       port: 3306,
       username: 'root',
       password: 'Dj.249575',
-      database: 'mwwow_new',
+      database: 'mwwow',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UserModule,
     YysTVModule,
+    TypeModule,
+    ArticleModule,
   ],
 })
 export class AppModule {}
