@@ -11,7 +11,12 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { CreateUserDto, LoginDto, PasswordChangeDto } from './create_user.dto';
+import {
+  CreateUserDto,
+  LoginDto,
+  PasswordChangeDto,
+  UpdateUserDto,
+} from './create_user.dto';
 
 @Controller('/api/v5/')
 export class UserController {
@@ -49,6 +54,19 @@ export class UserController {
   async deleteUser(@Param('id') id: string): Promise<void> {
     try {
       await this.userService.delete(id);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // 修改用户信息
+  @Put('user/:id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<void> {
+    try {
+      await this.userService.update(id, updateUserDto);
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }

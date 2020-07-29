@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { CreateArticleDto } from './create-article.dto';
+import { CreateArticleDto, ArticleListDto } from './create-article.dto';
 import { Article } from './article.entity';
 
 @Controller('/api/v5/article')
@@ -31,13 +31,17 @@ export class ArticleController {
     return this.articleService.update(id, createArticleDto);
   }
   @Get()
-  getArticle(
+  async getArticle(
     @Query('typeId') typeId: string,
     @Query('pageNum') pageNum: number,
     @Query('pageSize') pageSize: number,
-  ): Promise<Article[]> {
+  ): Promise<Article[]|ArticleListDto> {
     if (!typeId) {
-      return this.articleService.findAll(pageNum, pageSize);
+      const result = await this.articleService.findAll(pageNum, pageSize);
+      return {
+        articles: result[0],
+        count: result[1],
+      };
     } else {
       return this.articleService.findType(typeId);
     }

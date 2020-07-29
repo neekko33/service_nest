@@ -65,7 +65,7 @@ export class ArticleService {
   }
 
   // 查找全部文章
-  async findAll(pageNum: number, pageSize: number): Promise<Article[]> {
+  async findAll(pageNum: number, pageSize: number): Promise<[Article[],number]> {
     try {
       return await this.articleRepository
         .createQueryBuilder('a')
@@ -84,7 +84,7 @@ export class ArticleService {
           't.id',
           't.typeName',
         ])
-        .getMany();
+        .getManyAndCount();
     } catch (e) {
       throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -112,7 +112,7 @@ export class ArticleService {
         .leftJoin('a.user', 'u')
         .leftJoin('a.type', 't')
         .where('a.typeId=:id', { id })
-        .orderBy('a.id', 'ASC')
+        .orderBy('a.id', 'DESC')
         .select([
           'a.id',
           'a.title',

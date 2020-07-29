@@ -17,3 +17,10 @@ export class PasswordChangeDto {
   password: string;
   newPassword: string;
 }
+
+export class UpdateUserDto {
+  nickname: string;
+  tags: string;
+  address: string;
+  introduce: string;
+}

@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { CreateUserDto, LoginDto, PasswordChangeDto } from './create_user.dto';
+import {
+  CreateUserDto,
+  LoginDto,
+  PasswordChangeDto,
+  UpdateUserDto,
+} from './create_user.dto';
 
 @Injectable()
 export class UserService {
@@ -51,6 +56,22 @@ export class UserService {
   // 删除用户
   async delete(id: string): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  // 修改用户信息
+  async update(id: string, u: UpdateUserDto): Promise<void> {
+    const { nickname, address, tags, introduce } = u;
+    await this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        nickname,
+        address,
+        tags,
+        introduce,
+      })
+      .where('id=:id', { id })
+      .execute();
   }
 
   // 用户登录
