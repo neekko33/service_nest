@@ -28,27 +28,19 @@ export class UserService {
 
   // 新增用户
   async create(u: CreateUserDto): Promise<void> {
-    const {
-      username,
-      password,
-      avatar,
-      nickname,
-      tags,
-      address,
-      introduce,
-    } = u;
+    console.log(JSON.stringify(u));
     await this.usersRepository
       .createQueryBuilder()
       .insert()
       .into(User)
       .values({
-        username,
-        password: () => `MD5(${password})`,
-        avatar,
-        nickname,
-        tags,
-        address,
-        introduce,
+        username: () => `"${u.username}"`,
+        password: () => `MD5("${u.password}")`,
+        avatar: () => `"${u.avatar}"`,
+        nickname: () => `"${u.nickname}"`,
+        tags: () => `"${u.tags}"`,
+        address: () => `"${u.address}"`,
+        introduce: () => `"${u.introduce}"`,
       })
       .execute();
   }
